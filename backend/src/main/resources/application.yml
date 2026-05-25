@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: ViralForge AI
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/viralforge_ai}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    enabled: false
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 20
+    show-sql: false
+
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+  web:
+    resources:
+      add-mappings: false
+
+logging:
+  level:
+    root: INFO
+    com.viralforge: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+jwt:
+  secret: ${JWT_SECRET:VerySecureSecretKeyForJWTTokenGenerationThatIsAtLeast256BitsLongForHS256Algorithm}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+huggingface:
+  api:
+    key: ${HUGGINGFACE_API_KEY:}
+    url: https://router.huggingface.co/v1/chat/completions
+
+server:
+  port: 8081
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+    include-binding-errors: always
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics
+  endpoint:
+    health:
+      show-details: always

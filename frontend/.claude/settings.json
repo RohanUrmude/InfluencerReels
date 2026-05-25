@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd /c \"taskkill /F /IM java.exe /T\")",
+      "Bash(git rebase *)",
+      "Bash(git stash *)",
+      "Bash(rm -rf .git)",
+      "Bash(git remote *)",
+      "Bash(git commit -m 'Initial commit: Complete ViralForge AI platform with multi-model AI orchestration, content generation, language adaptation, and trending analytics *)"
+    ]
+  }
+}
