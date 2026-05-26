@@ -12,7 +12,7 @@ import { ApiService } from '../../core/services/api.service';
       <!-- Header -->
       <div class="mb-8">
         <h1 class="text-4xl font-bold text-white mb-2">🤖 Model Validation Dashboard</h1>
-        <p class="text-purple-200">Assess and Compare Phi, Llama, and Mistral Models with Google Gemini AI</p>
+        <p class="text-purple-200">Assess and Compare Phi, Llama, and Mistral Models with Hugging Face Inference</p>
       </div>
 
       <!-- Tab Navigation -->
@@ -119,7 +119,7 @@ import { ApiService } from '../../core/services/api.service';
         <!-- Results -->
         <div *ngIf="validationResult" class="space-y-4">
           <div class="backdrop-blur-xl bg-green-500/20 border border-green-500/50 rounded-xl p-6">
-            <h3 class="text-lg font-bold text-green-300 mb-3">📋 Gemini Evaluation:</h3>
+            <h3 class="text-lg font-bold text-green-300 mb-3">📋 Hugging Face Evaluation:</h3>
             <p class="text-white/80 whitespace-pre-wrap">{{ validationResult }}</p>
           </div>
         </div>
@@ -174,7 +174,7 @@ import { ApiService } from '../../core/services/api.service';
           <!-- Compare Button -->
           <button (click)="compareModels()" [disabled]="isValidating"
             class="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-lg transition disabled:opacity-50">
-            {{ isValidating ? '⏳ Comparing...' : '🔄 Compare Models with Gemini' }}
+            {{ isValidating ? '⏳ Comparing...' : '🔄 Compare Models with HF' }}
           </button>
         </div>
 
@@ -191,7 +191,7 @@ import { ApiService } from '../../core/services/api.service';
       <div *ngIf="isLoading" class="fixed inset-0 bg-black/50 flex items-center justify-center rounded-xl">
         <div class="text-center">
           <div class="inline-block animate-spin text-4xl mb-4">⚙️</div>
-          <p class="text-white text-lg">Processing with Gemini...</p>
+          <p class="text-white text-lg">Processing with Hugging Face...</p>
         </div>
       </div>
     </div>

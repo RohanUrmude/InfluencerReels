@@ -45,11 +45,8 @@ huggingface:
   api:
     key: ${HUGGINGFACE_API_KEY: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}
     url: https://router.huggingface.co/v1/chat/completions
-
-gemini:
-  api:
-    key: ${GEMINI_API_KEY:AlzaSyDuUdJ0O9cPtzZlzQt-ORHDucLuSLjhhw}
-    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
+    model: ${HF_MODEL:openai/gpt-oss-120b:groq}
+    baseUrl: https://router.huggingface.co/v1
 
 server:
   port: 8081

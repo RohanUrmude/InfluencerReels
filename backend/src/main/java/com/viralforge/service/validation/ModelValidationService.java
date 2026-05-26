@@ -21,11 +21,14 @@ public class ModelValidationService {
     @Autowired(required = false)
     private RestTemplate restTemplate;
 
-    @Value("${gemini.api.key:}")
-    private String geminiApiKey;
+    @Value("${huggingface.api.key:}")
+    private String huggingfaceApiKey;
 
-    @Value("${gemini.api.url:https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent}")
-    private String geminiApiUrl;
+    @Value("${huggingface.api.baseUrl:https://router.huggingface.co/v1}")
+    private String huggingfaceBaseUrl;
+
+    @Value("${huggingface.api.model:openai/gpt-oss-120b:groq}")
+    private String huggingfaceModel;
 
     // Store metrics for each model in current session
     private Map<String, ModelMetrics> modelMetricsMap = new HashMap<>();
@@ -68,12 +71,12 @@ public class ModelValidationService {
     }
 
     /**
-     * Validate model response using Gemini
+     * Validate model response using Hugging Face Inference API
      */
     public String validateResponseWithClaude(String modelName, String originalPrompt, String modelResponse) {
         try {
             String validationPrompt = buildValidationPrompt(modelName, originalPrompt, modelResponse);
-            String claudeEvaluation = callGeminiAPI(validationPrompt);
+            String claudeEvaluation = callHuggingFaceAPI(validationPrompt);
 
             ModelMetrics metrics = modelMetricsMap.getOrDefault(modelName, new ModelMetrics(modelName));
             metrics.validationNotes = claudeEvaluation;
@@ -93,7 +96,7 @@ public class ModelValidationService {
     public BigDecimal scoreModelResponse(String modelName, String responseContent, String context) {
         try {
             String scoringPrompt = buildScoringPrompt(modelName, responseContent, context);
-            String scoreResponse = callGeminiAPI(scoringPrompt);
+            String scoreResponse = callHuggingFaceAPI(scoringPrompt);
 
             // Extract score from response (expecting format: "Score: X/10")
             BigDecimal score = extractScore(scoreResponse);
@@ -123,9 +126,9 @@ public class ModelValidationService {
                 evaluations.put(entry.getKey(), evaluation);
             }
 
-            // Get comparative analysis from Gemini
+            // Get comparative analysis from Hugging Face
             String comparativePrompt = buildComparativePrompt(modelResponses, prompt);
-            String comparativeAnalysis = callGeminiAPI(comparativePrompt);
+            String comparativeAnalysis = callHuggingFaceAPI(comparativePrompt);
 
             comparison.put("individual_evaluations", evaluations);
             comparison.put("comparative_analysis", comparativeAnalysis);
@@ -302,43 +305,45 @@ public class ModelValidationService {
         return sb.toString();
     }
 
-    private String callGeminiAPI(String prompt) {
+    private String callHuggingFaceAPI(String prompt) {
         try {
-            if (geminiApiKey == null || geminiApiKey.isEmpty() || restTemplate == null) {
-                log.warn("Gemini API key or RestTemplate not configured. Returning detailed evaluation.");
+            if (huggingfaceApiKey == null || huggingfaceApiKey.isEmpty() || restTemplate == null) {
+                log.warn("Hugging Face API key or RestTemplate not configured. Returning detailed evaluation.");
                 return generateDetailedMockEvaluation(prompt);
             }
 
-            String urlWithKey = geminiApiUrl + "?key=" + geminiApiKey;
+            String url = huggingfaceBaseUrl + "/chat/completions";
 
             Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("model", huggingfaceModel);
+            requestBody.put("max_tokens", 1024);
+            requestBody.put("temperature", 0.7);
 
-            List<Map<String, Object>> contents = new ArrayList<>();
-            Map<String, Object> content = new HashMap<>();
+            List<Map<String, String>> messages = new ArrayList<>();
+            Map<String, String> message = new HashMap<>();
+            message.put("role", "user");
+            message.put("content", prompt);
+            messages.add(message);
+            requestBody.put("messages", messages);
 
-            List<Map<String, String>> parts = new ArrayList<>();
-            Map<String, String> part = new HashMap<>();
-            part.put("text", prompt);
-            parts.add(part);
+            org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+            headers.set("Authorization", "Bearer " + huggingfaceApiKey);
+            headers.set("Content-Type", "application/json");
 
-            content.put("parts", parts);
-            contents.add(content);
+            org.springframework.http.HttpEntity<Map<String, Object>> entity =
+                new org.springframework.http.HttpEntity<>(requestBody, headers);
 
-            requestBody.put("contents", contents);
+            var response = restTemplate.postForObject(url, entity, Map.class);
 
-            var response = restTemplate.postForObject(urlWithKey, requestBody, Map.class);
-
-            if (response != null && response.containsKey("candidates")) {
-                List<Map<String, Object>> candidates = (List<Map<String, Object>>) response.get("candidates");
-                if (!candidates.isEmpty()) {
-                    Map<String, Object> candidate = candidates.get(0);
-                    if (candidate.containsKey("content")) {
-                        Map<String, Object> candidateContent = (Map<String, Object>) candidate.get("content");
-                        if (candidateContent.containsKey("parts")) {
-                            List<Map<String, String>> candidateParts = (List<Map<String, String>>) candidateContent.get("parts");
-                            if (!candidateParts.isEmpty()) {
-                                return candidateParts.get(0).get("text");
-                            }
+            if (response != null && response.containsKey("choices")) {
+                List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
+                if (!choices.isEmpty()) {
+                    Map<String, Object> choice = choices.get(0);
+                    if (choice.containsKey("message")) {
+                        Map<String, String> messageObj = (Map<String, String>) choice.get("message");
+                        String content = messageObj.get("content");
+                        if (content != null && !content.isEmpty()) {
+                            return content;
                         }
                     }
                 }
@@ -346,7 +351,7 @@ public class ModelValidationService {
 
             return generateDetailedMockEvaluation(prompt);
         } catch (Exception e) {
-            log.warn("Gemini API error (using mock evaluation): {}", e.getMessage());
+            log.warn("Hugging Face API error (using mock evaluation): {}", e.getMessage());
             return generateDetailedMockEvaluation(prompt);
         }
     }
