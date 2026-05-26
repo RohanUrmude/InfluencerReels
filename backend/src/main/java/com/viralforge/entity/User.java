@@ -49,8 +49,8 @@ public class User {
     @Column(columnDefinition = "INTEGER DEFAULT 0")
     private Integer apiUsageCount = 0;
 
-    @Column(columnDefinition = "INTEGER DEFAULT 1000")
-    private Integer maxMonthlyApiCalls = 1000;
+    @Column(columnDefinition = "INTEGER DEFAULT 50")
+    private Integer maxMonthlyApiCalls = 50;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean isActive = true;
