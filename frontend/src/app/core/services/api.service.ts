@@ -49,6 +49,29 @@ export class ApiService {
     return this.http.get<ApiResponse<any>>(`${this.apiUrl}/trending/all`);
   }
 
+  // Model Validation APIs
+  getModelPerformance(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/models/validation/performance/all`);
+  }
+
+  validateModelResponse(modelName: string, prompt: string, response: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/models/validation/validate`, response, {
+      params: { modelName, prompt }
+    });
+  }
+
+  scoreModelResponse(modelName: string, context: string, response: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/models/validation/score`, response, {
+      params: { modelName, context }
+    });
+  }
+
+  compareModels(prompt: string, responses: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/models/validation/compare`, responses, {
+      params: { prompt }
+    });
+  }
+
   getTrendingByPlatform(platform: string): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(`${this.apiUrl}/trending/${platform}`);
   }

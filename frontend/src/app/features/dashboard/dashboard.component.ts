@@ -21,6 +21,7 @@ import { ApiService } from '../../core/services/api.service';
             <a routerLink="/history" class="text-white hover:text-purple-400 transition">History</a>
             <a routerLink="/analytics" class="text-white hover:text-purple-400 transition">Analytics</a>
             <a routerLink="/trending" class="text-white hover:text-purple-400 transition">Trending</a>
+            <a routerLink="/models" class="text-white hover:text-purple-400 transition">🤖 Models</a>
             <a routerLink="/profile" class="text-white hover:text-purple-400 transition">Profile</a>
             <button (click)="logout()" class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition">
               Logout

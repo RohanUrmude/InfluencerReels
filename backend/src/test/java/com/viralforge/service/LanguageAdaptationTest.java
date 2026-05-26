@@ -9,19 +9,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class LanguageAdaptationTest {
 
     @Mock
+    private RestTemplateBuilder restTemplateBuilder;
+
+    @Mock
     private RestTemplate restTemplate;
 
-    @InjectMocks
     private LanguageAdaptationService languageAdaptationService;
 
     private String englishContent;
@@ -29,6 +33,15 @@ public class LanguageAdaptationTest {
 
     @BeforeEach
     public void setUp() {
+        when(restTemplateBuilder.setConnectTimeout(any(Duration.class)))
+            .thenReturn(restTemplateBuilder);
+        when(restTemplateBuilder.setReadTimeout(any(Duration.class)))
+            .thenReturn(restTemplateBuilder);
+        when(restTemplateBuilder.build())
+            .thenReturn(restTemplate);
+
+        languageAdaptationService = new LanguageAdaptationService(restTemplateBuilder);
+
         englishContent = "Wake up at 5 AM. Hit the gym. Focus on transformation.";
         availableLanguages = languageAdaptationService.getAvailableLanguages();
     }

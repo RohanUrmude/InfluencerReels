@@ -57,7 +57,14 @@
       "Read(//c/Users/rohan.urmude/**)",
       "Bash(git init *)",
       "Bash(git config *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2025.2.6.1/plugins/maven/lib/maven3/bin/mvn\" clean compile)",
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2025.2.6.1/plugins/maven/lib/maven3/bin/mvn\" clean test-compile)",
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2025.2.6.1/plugins/maven/lib/maven3/bin/mvn\" test -Dtest=ContentGenerationTest)",
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2025.2.6.1/plugins/maven/lib/maven3/bin/mvn\" clean compile -DskipTests)",
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2025.2.6.1/plugins/maven/lib/maven3/bin/mvn\" test -Dtest=AuthServiceTest,ContentGenerationTest)",
+      "Bash(java -version)",
+      "Bash(javac -version)"
     ],
     "additionalDirectories": [
       "c:\\Users\\rohan.urmude\\Desktop\\InfluencerReels\\backend\\src\\main\\java\\com\\viralforge\\controller",

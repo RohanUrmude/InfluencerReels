@@ -46,6 +46,11 @@ export const appRoutes: Routes = [
     loadComponent: () => import('./features/trending/trending.component').then(m => m.TrendingComponent)
   },
   {
+    path: 'models',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/dashboard/model-validation-dashboard.component').then(m => m.ModelValidationDashboardComponent)
+  },
+  {
     path: '**',
     redirectTo: 'dashboard'
   }

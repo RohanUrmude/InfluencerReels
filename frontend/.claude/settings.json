@@ -6,7 +6,10 @@
       "Bash(git stash *)",
       "Bash(rm -rf .git)",
       "Bash(git remote *)",
-      "Bash(git commit -m 'Initial commit: Complete ViralForge AI platform with multi-model AI orchestration, content generation, language adaptation, and trending analytics *)"
+      "Bash(git commit -m 'Initial commit: Complete ViralForge AI platform with multi-model AI orchestration, content generation, language adaptation, and trending analytics *)",
+      "Bash(git push *)",
+      "Bash(psql -U postgres -h localhost -l)",
+      "Bash(java -cp \"target/classes:target/dependency/*\" com.viralforge.ViralForgeAIApplication)"
     ]
   }
 }

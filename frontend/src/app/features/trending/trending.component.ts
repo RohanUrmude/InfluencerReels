@@ -27,13 +27,13 @@ import { ApiService } from '../../core/services/api.service';
 
         <!-- Platform Tabs -->
         <div class="flex gap-4 mb-8">
-          <button (click)="selectedPlatform = 'tiktok'" [class.active]="selectedPlatform === 'tiktok'" class="px-6 py-2 rounded-lg font-semibold transition" [ngClass]="selectedPlatform === 'tiktok' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'">
+          <button (click)="selectPlatform('tiktok')" [class.active]="selectedPlatform === 'tiktok'" class="px-6 py-2 rounded-lg font-semibold transition" [ngClass]="selectedPlatform === 'tiktok' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'">
             🎵 TikTok
           </button>
-          <button (click)="selectedPlatform = 'reels'" [class.active]="selectedPlatform === 'reels'" class="px-6 py-2 rounded-lg font-semibold transition" [ngClass]="selectedPlatform === 'reels' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'">
+          <button (click)="selectPlatform('reels')" [class.active]="selectedPlatform === 'reels'" class="px-6 py-2 rounded-lg font-semibold transition" [ngClass]="selectedPlatform === 'reels' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'">
             📱 Instagram Reels
           </button>
-          <button (click)="selectedPlatform = 'youtube'" [class.active]="selectedPlatform === 'youtube'" class="px-6 py-2 rounded-lg font-semibold transition" [ngClass]="selectedPlatform === 'youtube' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'">
+          <button (click)="selectPlatform('youtube')" [class.active]="selectedPlatform === 'youtube'" class="px-6 py-2 rounded-lg font-semibold transition" [ngClass]="selectedPlatform === 'youtube' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'">
             ▶️ YouTube Shorts
           </button>
         </div>
@@ -145,5 +145,10 @@ export class TrendingComponent implements OnInit {
   updateCurrentTrends(): void {
     const platformKey = this.selectedPlatform + 'Trends';
     this.currentTrends = this.allTrends[platformKey] || [];
+  }
+
+  selectPlatform(platform: string): void {
+    this.selectedPlatform = platform;
+    this.loadTrendingContent();
   }
 }

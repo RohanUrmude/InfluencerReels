@@ -5,7 +5,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/viralforge_ai}
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:}
+    password: ${DB_PASSWORD:Rohan@123}
     driver-class-name: org.postgresql.Driver
 
   flyway:
@@ -43,8 +43,13 @@ jwt:
 
 huggingface:
   api:
-    key: ${HUGGINGFACE_API_KEY:}
+    key: ${HUGGINGFACE_API_KEY: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}
     url: https://router.huggingface.co/v1/chat/completions
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY:AlzaSyDuUdJ0O9cPtzZlzQt-ORHDucLuSLjhhw}
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
 
 server:
   port: 8081
