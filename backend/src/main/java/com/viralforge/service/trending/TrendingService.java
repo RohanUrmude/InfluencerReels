@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class TrendingService {
-    @Value("${huggingface.api.key}")
+    @Value("${huggingface.api.key:}")
     private String huggingFaceApiKey;
 
     @Value("${huggingface.api.url:https://router.huggingface.co/v1/chat/completions}")
@@ -57,6 +57,12 @@ public class TrendingService {
     }
 
     private String getTrendingTopicsFromAI() {
+        // If API key is not configured, return default trending data
+        if (huggingFaceApiKey == null || huggingFaceApiKey.isEmpty()) {
+            log.warn("Hugging Face API key not configured. Using default trending data.");
+            return generateDefaultTrendingJson();
+        }
+
         String prompt = """
             Generate a JSON response with currently trending topics and hashtags (as of 2026) for short-form video platforms.
 
@@ -114,7 +120,20 @@ public class TrendingService {
             log.error("Error calling AI for trending topics", e);
         }
 
-        return null;
+        return generateDefaultTrendingJson();
+    }
+
+    private String generateDefaultTrendingJson() {
+        return """
+            {
+              "hashtags": ["#AIRevolution", "#ContentCreating", "#DigitalNomad", "#TechTrends", "#CreatorEconomy"],
+              "topics": ["AI and machine learning", "Content creation tools", "Digital marketing", "Short-form video trends", "Online community building"],
+              "contentTypes": ["educational", "entertainment", "motivational", "lifestyle", "tutorial"],
+              "musicTrends": ["Synthwave vibes", "Hip-hop beats", "Lofi instrumental", "Trending audio tracks", "Viral sounds"],
+              "challenges": ["30-day coding challenge", "Create and share challenge", "Talent showcase", "Transformation challenge", "Learning journey"],
+              "aesthetics": ["minimalist", "vintage", "cyberpunk", "cozy", "maximalist"]
+            }
+            """;
     }
 
     private List<Map<String, Object>> parseTrendingData(String jsonResponse, String platform) {

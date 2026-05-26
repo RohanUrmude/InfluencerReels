@@ -30,6 +30,11 @@ public class ModelValidationService {
     @Value("${huggingface.api.model:openai/gpt-oss-120b:groq}")
     private String huggingfaceModel;
 
+    // Flag to indicate if API key is available
+    private boolean hasValidApiKey() {
+        return huggingfaceApiKey != null && !huggingfaceApiKey.isEmpty() && !huggingfaceApiKey.startsWith("${");
+    }
+
     // Store metrics for each model in current session
     private Map<String, ModelMetrics> modelMetricsMap = new HashMap<>();
 
@@ -307,8 +312,8 @@ public class ModelValidationService {
 
     private String callHuggingFaceAPI(String prompt) {
         try {
-            if (huggingfaceApiKey == null || huggingfaceApiKey.isEmpty() || restTemplate == null) {
-                log.warn("Hugging Face API key or RestTemplate not configured. Returning detailed evaluation.");
+            if (!hasValidApiKey() || restTemplate == null) {
+                log.warn("Hugging Face API key not configured. Using mock evaluation.");
                 return generateDetailedMockEvaluation(prompt);
             }
 
